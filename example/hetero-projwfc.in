@@ -1,0 +1,12 @@
+&PROJWFC
+prefix = 'Sb111'
+outdir='/scratch/vinicius/HSE/hetero-HSE2/'
+ngauss = 0
+degauss = 0.005
+DeltaE = 0.001
+Emin = -10
+Emax = 10
+!lsym = .false.
+filpdos = 'hetero-pdos'
+filproj = 'hetero-proj'
+/

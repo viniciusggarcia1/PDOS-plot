@@ -80,9 +80,9 @@ graph_s ()
 
 plt.show()
 
-PAREI AQUI ~~~ PRECISO COLOCAR ESSE LOOP NO GRAPH_STRUCTURE!!!
+PAREI AQUI ~ PRECISO COLOCAR ESSE LOOP NO GRAPH_STRUCTURE!!!
 '''
-#print(src.full_name)
+print(src.full_name)
 	
 	#print (posi)			
 	

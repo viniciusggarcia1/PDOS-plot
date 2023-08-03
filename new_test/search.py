@@ -44,6 +44,7 @@ def files_directory(path_folder):
         list_spdf.append('total')
 
         return list_atoms, list_spdf, full_name
-        #print(list_spdf)
-        #print(list_atoms)
 
+def soma(file):
+        Es, ldos = np.loadtxt(file, unpack=True, usecols=(0,1))
+        ldosS[i] = ldosS[i] + ldos[i]

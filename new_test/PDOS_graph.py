@@ -22,6 +22,8 @@ def graph_s (E, ldos, legd, marker):
     #plt.xlim(-10, 1)
     plt.axvline(0, linestyle='dashed', color='gray')
 
+
+
 '''   
 def graph_p (file, legd):
     Ep, ldos, asd, asd, asd= np.loadtxt(file, unpack=True, usecols=(0,1,2,3,4))

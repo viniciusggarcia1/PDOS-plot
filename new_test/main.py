@@ -3,7 +3,13 @@ from matplotlib import pyplot as plt
 import re
 import os
 import search as src
-import graph as gh
+import PDOS_graph as gh
+import questions as qs
+import pTerminalTools as tt
+
+
+tt.ProgramTitle('pDOS Plot', 'Vinícius G. Garcia', 'viniciusggarcia1@hotmail.com')
+tt.box('pDOS Plot')
 
 #caminho_pasta = os.getcwd()  # Obtém o caminho da pasta atual
 path_folder = '/mnt/c/Users/vinic/OneDrive/Área de Trabalho/site_testes/PDOS-plot/example/'
@@ -11,47 +17,95 @@ path_folder = '/mnt/c/Users/vinic/OneDrive/Área de Trabalho/site_testes/PDOS-pl
 #print(src.files_directory(path_folder)[2][1])
 
 match=[]
+match_atoms=[]
+match_spdf=[]
+
 E=[]
 
-x = 1
 
-#Es, ldos = np.loadtxt(match[i], unpack=True, usecols=(0,1))
-if x == 1:
+Efermi=-3
+#Efermi=qs.Energy_Fermi ()
+choice = qs.DOS_type()['answer']
+
+
+
+
+if choice == 'by atoms':
     ltot=0
     for j in range (len(src.files_directory(path_folder)[0])):
 
+        ldosS=0
         for i in range(0, len(src.files_directory(path_folder)[2]), 1):
 
             pattern = rf'\({src.files_directory(path_folder)[0][j]}\)'
 
+            #Salva o nome dos arquivos que deram match com o padrão em um vetor
             if re.findall(pattern, src.files_directory(path_folder)[2][i]):
                 match.append(src.files_directory(path_folder)[2][i])
 
         #ldosS = [0] * len(ldos)
         lS=[]
-        ldosS=0
+        #ldosS=0
         for k in range(len(match)):
             full_path = os.path.join(path_folder, match[k])
             Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
 
             ldosS = ldosS + ldos
         ltot=ltot + ldosS
+
+        # Desloca pro nível de Fermi e plota a contribuição do átmo j
+        Es=Es-Efermi
         gh.graph_s(Es, ldosS, src.files_directory(path_folder)[0][j], False)
 
+    #Es=Es-Efermi
     gh.graph_s(Es, ltot, src.files_directory(path_folder)[0][j], True)
+
+    #Salva o gráfico
     plt.tight_layout()
     plt.savefig('graph.png', dpi=800)
 
+
+
+if choice == 'by orbital':
+    ltot = 0
+    # Lista com os átomos e orbitais selecionados pelo usuário
+    atoms = qs.atoms_choice(src.files_directory(path_folder)[0])['answer']
+    spdf = qs.spdf_choice(src.files_directory(path_folder)[1])['answer']
+    
+    # coloca os elementos da lista em ordem alfabética
+    atoms = sorted(atoms)
+    spdf = sorted(spdf)
+
+    print(atoms)
+    print(spdf)
+
+    for i in range(len(spdf)):
+
+        pattern_spdf = rf'\({spdf[i]}\)'
+        ldosS=0
+        for j in range(len(atoms)):
+
+            pattern_atoms = rf'\({atoms[j]}\)'
+            for k in range (len(src.files_directory(path_folder)[2])):
+                
+                a = src.files_directory(path_folder)[2][k]
+                if re.findall(pattern_atoms, a) and re.findall(pattern_spdf, a):
+                    match.append(src.files_directory(path_folder)[2][k])
+
+
         
-#for i in range(len(match)):
-#    print(match[i])
+            for m in range (len(match)):
+                full_path = os.path.join(path_folder, match[m])
+                Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
 
-#print(src.files_directory(path_folder)[0])
+                ldosS = ldosS + ldos
 
-'''
-caminho_completo = os.path.join(path_folder, match[0])
-
-gh.graph_s(caminho_completo, src.files_directory(path_folder)[0][j])
-plt.tight_layout()
-plt.savefig('graph.png', dpi=800)
-'''
+            ltot = ltot + ldosS
+                
+        Es=Es-Efermi
+        gh.graph_s(Es, ldosS, spdf[i], False)
+    gh.graph_s(Es, ltot, None, True)
+    
+    #Salva o gráfico
+    plt.tight_layout()
+    plt.savefig('graph.png', dpi=800)

@@ -42,8 +42,8 @@ if choice == 'by atoms':
             #Salva o nome dos arquivos que deram match com o padrão em um vetor
             if re.findall(pattern, src.files_directory(path_folder)[2][i]):
                 match.append(src.files_directory(path_folder)[2][i])
-        print(match)
-        print()
+        #print(match)
+        #print()
 
         #ldosS = [0] * len(ldos)
         lS=[]
@@ -83,12 +83,6 @@ if choice == 'by orbital':
 
     for i in range(len(spdf)):
 
-        if spdf[i] == 'total':
-            TOT = True
-        else:
-            TOT = False
-
-
         pattern_spdf = rf'\({spdf[i]}\)'
         ldosS=0
         for j in range(len(atoms)):
@@ -112,12 +106,15 @@ if choice == 'by orbital':
             
 
             ltot = ltot + ldosS
-                
-        Es=Es-Efermi
-        gh.graph_s(Es, ldosS, spdf[i], False)
+        
+        #plota o gráfico para os orbitais
+        if spdf[i] != 'total':
+            Ess=Es-Efermi
+            gh.graph_s(Ess, ldosS, spdf[i], False)
 
-    if TOT == True:
-        gh.graph_s(Es, ltot, None, True)
+    #plota o gráfico para a contribuição total
+    if 'total' in spdf:
+        gh.graph_s(Ess, ltot, None, True)
     
     #Salva o gráfico
     plt.tight_layout()

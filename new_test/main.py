@@ -16,7 +16,6 @@ path_folder = '/mnt/c/Users/vinic/OneDrive/Área de Trabalho/site_testes/PDOS-pl
 
 #print(src.files_directory(path_folder)[2][1])
 
-match=[]
 match_atoms=[]
 match_spdf=[]
 
@@ -35,6 +34,7 @@ if choice == 'by atoms':
     for j in range (len(src.files_directory(path_folder)[0])):
 
         ldosS=0
+        match=[]
         for i in range(0, len(src.files_directory(path_folder)[2]), 1):
 
             pattern = rf'\({src.files_directory(path_folder)[0][j]}\)'
@@ -42,6 +42,8 @@ if choice == 'by atoms':
             #Salva o nome dos arquivos que deram match com o padrão em um vetor
             if re.findall(pattern, src.files_directory(path_folder)[2][i]):
                 match.append(src.files_directory(path_folder)[2][i])
+        print(match)
+        print()
 
         #ldosS = [0] * len(ldos)
         lS=[]
@@ -81,29 +83,41 @@ if choice == 'by orbital':
 
     for i in range(len(spdf)):
 
+        if spdf[i] == 'total':
+            TOT = True
+        else:
+            TOT = False
+
+
         pattern_spdf = rf'\({spdf[i]}\)'
         ldosS=0
         for j in range(len(atoms)):
 
             pattern_atoms = rf'\({atoms[j]}\)'
+            match=[]
             for k in range (len(src.files_directory(path_folder)[2])):
                 
                 a = src.files_directory(path_folder)[2][k]
                 if re.findall(pattern_atoms, a) and re.findall(pattern_spdf, a):
                     match.append(src.files_directory(path_folder)[2][k])
 
+            #print(match)
+            #print()
 
             ldosS=0
             for m in range (len(match)):
                 full_path = os.path.join(path_folder, match[m])
                 Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
                 ldosS = ldosS + ldos
+            
 
             ltot = ltot + ldosS
                 
         Es=Es-Efermi
         gh.graph_s(Es, ldosS, spdf[i], False)
-    gh.graph_s(Es, ltot, None, True)
+
+    if TOT == True:
+        gh.graph_s(Es, ltot, None, True)
     
     #Salva o gráfico
     plt.tight_layout()

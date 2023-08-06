@@ -93,11 +93,10 @@ if choice == 'by orbital':
                     match.append(src.files_directory(path_folder)[2][k])
 
 
-        
+            ldosS=0
             for m in range (len(match)):
                 full_path = os.path.join(path_folder, match[m])
                 Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
-
                 ldosS = ldosS + ldos
 
             ltot = ltot + ldosS

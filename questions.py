@@ -22,7 +22,7 @@ def DOS_type ():
 def atoms_choice (list_atoms):
 	question = [
 		inquirer.Checkbox('answer',
-		message='Selecione os átomos: ',
+		message='Selecione os átomos',
 		choices=list_atoms,
 		carousel=True
 		)
@@ -58,6 +58,16 @@ def yn ():
 	answers = inquirer.prompt(question)
 	return answers
 
+# Escolha de orbitais
+def orbital_component_p ():
+	question = [
+		inquirer.Checkbox('answer',
+		message='Selecione as omponentes do orbital p',
+		choices=['px', 'py', 'pz'],
+		carousel=True
+		)
+	]
 
-def orbital_component ():
-	return 2
+	# Executa a pergunta e obtém a resposta do usuário
+	answers = inquirer.prompt(question)
+	return answers

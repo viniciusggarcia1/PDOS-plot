@@ -22,6 +22,7 @@ def graph_spdf (E, ldos, legd, marker):
     plt.xlim(-3, 3)
     plt.axvline(0, linestyle='dashed', color='gray')
 
+'''
 def graph_p (E, file, legd, marker):
     zdos, xdos, ydos = np.loadtxt(file, unpack=True, usecols=(2,3,4))
     if marker == False:
@@ -42,3 +43,4 @@ def graph_p (E, file, legd, marker):
     plt.autoscale(enable=True, axis='both', tight=True)
     #plt.xlim(-3, 3)
     plt.axvline(0, linestyle='dashed', color='gray')
+'''

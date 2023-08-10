@@ -19,7 +19,7 @@ import pTerminalTools as tt
 
 
 tt.ProgramTitle('pDOS Plot', 'Vinícius G. Garcia', 'viniciusggarcia1@hotmail.com')
-#tt.box('pDOS Plot')
+tt.box('Code to plot PDOS from Quantum Espresso files')
 
 
 match_atoms=[]
@@ -93,6 +93,8 @@ if choice == 'by orbital':
     #Pergunta se o usuário quer plotar as contribuições por orbital
     yn = qs.yn()['answer']
 
+    qt_orb_p= qs.orbital_component_p()
+
     comp_orb=[]
     if yn == 'yes':
         if 'p' in spdf:
@@ -154,7 +156,9 @@ if choice == 'by orbital':
                 
         
     if yn == 'yes':
-        gh.graph_spdf(Ess, ldosS2, 's', False)
+        if 's' in spdf:
+            gh.graph_spdf(Ess, ldosS2, 's', False)
+            
         gh.graph_spdf(Ess, xdosP, 'px', False)
         gh.graph_spdf(Ess, ydosP, 'py', False)
         gh.graph_spdf(Ess, zdosP, 'pz', False)

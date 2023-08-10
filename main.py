@@ -78,6 +78,10 @@ if choice == 'by atoms':
 
 if choice == 'by orbital':
     ltot = 0
+    zdosP = 0
+    xdosP = 0
+    ydosP = 0
+    ldosS2 = 0
     # Lista com os átomos e orbitais selecionados pelo usuário
     atoms = qs.atoms_choice(src.files_directory(src.path_folder)[0])['answer']
     spdf = qs.spdf_choice(src.files_directory(src.path_folder)[1])['answer']
@@ -104,9 +108,7 @@ if choice == 'by orbital':
 
         pattern_spdf = rf'\({spdf[i]}\)'
         ldosS=0
-        zdosP=0
-        xdosP=0
-        ydosP=0
+
         for j in range(len(atoms)):
 
             pattern_atoms = rf'\({atoms[j]}\)'
@@ -124,6 +126,7 @@ if choice == 'by orbital':
                     Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
                     
                     ldosS = ldosS + ldos
+                    ltot = ltot + ldos
                     
                 else:
  
@@ -131,24 +134,30 @@ if choice == 'by orbital':
                         Es, ldos, zdos, xdos, ydos = np.loadtxt(full_path, unpack=True, usecols=(0,1,2,3,4))
                         zdosP = zdosP + zdos
                         xdosP = xdosP + xdos
-                        ydosP = ydosP + ydos                    
-                    else:
+                        ydosP = ydosP + ydos
+                        ltot = ltot + ldos                  
+                    if spdf[i] == 's':
                         Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
+                        #ldosS = ldosS + ldos
+                        ldosS2 = ldosS2 + ldos
+                        ltot = ltot + ldos
                         
 
                         #print('hahaha')
-                ltot = ltot + ldos
-
+                
 
         #plota o gráfico para os orbitais
         if spdf[i] != 'total':
             Ess=Es-Efermi
             if yn == 'no':
                 gh.graph_spdf(Ess, ldosS, spdf[i], False)
-            else:
-                gh.graph_spdf(Ess, zdosP, 'pz', False)
-                gh.graph_spdf(Ess, xdosP, 'px', False)
-                gh.graph_spdf(Ess, ydosP, 'py', False)
+                
+        
+    if yn == 'yes':
+        gh.graph_spdf(Ess, ldosS2, 's', False)
+        gh.graph_spdf(Ess, xdosP, 'px', False)
+        gh.graph_spdf(Ess, ydosP, 'py', False)
+        gh.graph_spdf(Ess, zdosP, 'pz', False)
 
     #plota o gráfico para a contribuição total
     if 'total' in spdf:
@@ -157,7 +166,6 @@ if choice == 'by orbital':
     
     
     #Salva o gráfico
-    
     plt.tight_layout()
     plt.savefig('temp_graph.svg', format="svg")
     plt.close()

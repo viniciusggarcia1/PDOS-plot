@@ -19,11 +19,11 @@ def DOS_type ():
 	answers = inquirer.prompt(question)
 	return answers
 
-def atoms_choice ():
+def atoms_choice (list_atoms):
 	question = [
 		inquirer.Checkbox('answer',
 		message='Selecione os átomos: ',
-		choices=src.list_atoms,
+		choices=list_atoms,
 		carousel=True
 		)
 	]
@@ -32,11 +32,11 @@ def atoms_choice ():
 	answers = inquirer.prompt(question)
 	return answers
 	
-def spdf_choice ():
+def spdf_choice (list_spdf):
 	question = [
 		inquirer.Checkbox('answer',
 		message='Selecione os orbitais a serem plotados',
-		choices=src.list_spdf,
+		choices=list_spdf,
 		carousel=True
 		)
 	]
@@ -44,3 +44,20 @@ def spdf_choice ():
 	# Executa a pergunta e obtém a resposta do usuário
 	answers = inquirer.prompt(question)
 	return answers
+
+def yn ():
+	question = [
+		inquirer.List('answer',
+		message='Você quer plotar componentes dos orbitais?',
+		choices=['yes', 'no'],
+		carousel=True
+		)
+	]
+
+	# Executa a pergunta e obtém a resposta do usuário
+	answers = inquirer.prompt(question)
+	return answers
+
+
+def orbital_component ():
+	return 2

@@ -19,7 +19,7 @@ def graph_spdf (E, ldos, legd, marker):
     plt.yticks(fontsize=16)
     plt.ylim(bottom=0)
     plt.autoscale(enable=True, axis='both', tight=True)
-    plt.xlim(-3, 3)
+    plt.xlim(-20, 5)
     plt.axvline(0, linestyle='dashed', color='gray')
 
 '''

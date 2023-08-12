@@ -5,12 +5,18 @@ def Energy_Fermi ():
 	E_fermi=float(input('Enter the Fermi Energy: '))
 	return E_fermi
 
+def Energy_graphx ():
+	ab = input("Enter the x interval (a,b): ")
+	a_b = ab.split(',')
+	a_b = [float(num) for num in a_b]
+	return a_b
+
 
 def DOS_type ():
 	question = [
 		inquirer.List('answer',
 		message='Você quer plotar por átomo ou por orbital?',
-		choices=['by atoms', 'by orbital', 'by my way'],
+		choices=['by atoms', 'by orbital'],
 		carousel=True
 		)
 	]
@@ -58,12 +64,39 @@ def yn ():
 	answers = inquirer.prompt(question)
 	return answers
 
-# Escolha de orbitais
+def pdos_tot ():
+	question = [
+		inquirer.List('answer',
+		message='Você quer plotar a PDOS total?',
+		choices=['yes', 'no'],
+		carousel=True
+		)
+	]
+
+	# Executa a pergunta e obtém a resposta do usuário
+	answers = inquirer.prompt(question)
+	return answers
+
+# Escolha de orbitais p
 def orbital_component_p ():
 	question = [
 		inquirer.Checkbox('answer',
-		message='Selecione as omponentes do orbital p',
+		message='Selecione as componentes do orbital p',
 		choices=['px', 'py', 'pz'],
+		carousel=True
+		)
+	]
+
+	# Executa a pergunta e obtém a resposta do usuário
+	answers = inquirer.prompt(question)
+	return answers
+
+# Escolha de orbitais d
+def orbital_component_d ():
+	question = [
+		inquirer.Checkbox('answer',
+		message='Selecione as componentes do orbital d',
+		choices=['dz2', 'dzx', 'dzy', 'dx2-y2', 'dxy'],
 		carousel=True
 		)
 	]

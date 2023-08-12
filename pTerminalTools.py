@@ -85,5 +85,3 @@ def draw_line(width = ColumnSize, div = 1):
         Line += '-' * sizes[i] + '+'
     
     print(Line)
-
-

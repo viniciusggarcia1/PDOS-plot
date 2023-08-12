@@ -27,15 +27,21 @@ match_spdf=[]
 
 E=[]
 
+#Pega o nível de Fermi
+#Efermi=-3
+Efermi=qs.Energy_Fermi ()
 
-Efermi=-3
-#Efermi=qs.Energy_Fermi ()
+#Pega o intervalo em x para plot do gráfico
+inter_x=qs.Energy_graphx()
+
+#Pergunta se o plot vai ser por átomo ou por orbitais
 choice = qs.DOS_type()['answer']
 
 
 
 if choice == 'by atoms':
     atoms = qs.atoms_choice(src.files_directory(src.path_folder)[0])['answer']
+    pdos_tot = qs.pdos_tot()['answer']
 
     ltot=0
     for j in range (len(atoms)):
@@ -60,10 +66,11 @@ if choice == 'by atoms':
 
         # Desloca pro nível de Fermi e plota a contribuição do átmo j
         Es=Es-Efermi
-        gh.graph_spdf(Es, ldosS, atoms[j], False)
+        gh.graph_spdf(Es, ldosS, atoms[j], False, inter_x)
 
-    #Es=Es-Efermi
-    gh.graph_spdf(Es, ltot, None, True)
+    if pdos_tot == 'yes':
+        #Es=Es-Efermi
+        gh.graph_spdf(Es, ltot, None, True, inter_x)
 
     #Salva o gráfico
     
@@ -97,8 +104,14 @@ if choice == 'by orbital':
     #Pergunta se o usuário quer plotar as contribuições por orbital
     yn = qs.yn()['answer']
 
+    #spdf.append('d')
+
+    #Armazena as componentes dos orbitais que o usuário quer plotar
     if yn == 'yes':
-        qt_orb_p= qs.orbital_component_p()['answer']
+        if 'p' in spdf:
+            qt_orb_p= qs.orbital_component_p()['answer']
+        if 'd' in spdf:
+            qt_orb_d= qs.orbital_component_d()['answer']
 
     comp_orb=[]
     if yn == 'yes':
@@ -141,10 +154,12 @@ if choice == 'by orbital':
                         zdosP = zdosP + zdos
                         xdosP = xdosP + xdos
                         ydosP = ydosP + ydos
-                        ltot = ltot + ldos
+                        
                         ltotx = ltotx + xdos
                         ltoty = ltoty + ydos
                         ltotz = ltotz + zdos
+
+                        ltot = ltot + ldos
 
                     if spdf[i] == 's':
                         Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
@@ -154,10 +169,13 @@ if choice == 'by orbital':
                     
                     #fazer mesmo procedimento para orbitais d e f
                     if spdf[i] == 'd':
-                        teste=0
+                        Ed, ldos, dz2, dzx, dzy, dx2_y2, dxy = np.loadtxt(full_path, unpack=True, usecols=(0,1,2,3,4,5,6))
                     
                     if spdf[i] == 'f':
-                        teste=0
+                        Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
+                        ldosf = ldosf + ldos
+                        ltot = ltot + ldos
+                        ####ACHO QUE O ORBITAL f ESTÁ QUASE PRONTO!!!###########
                         
 
                         #print('hahaha')
@@ -167,29 +185,29 @@ if choice == 'by orbital':
         if spdf[i] != 'total':
             Ess=Es-Efermi
             if yn == 'no':
-                gh.graph_spdf(Ess, ldosS, spdf[i], False)
+                gh.graph_spdf(Ess, ldosS, spdf[i], False, inter_x)
                 
         
     if yn == 'yes':
         if 's' in spdf:
-            gh.graph_spdf(Ess, ldosS2, 's', False)
+            gh.graph_spdf(Ess, ldosS2, 's', False, inter_x)
             
         if 'px' in (qt_orb_p):
-            gh.graph_spdf(Ess, xdosP, '$p_x$', False)
+            gh.graph_spdf(Ess, xdosP, '$p_x$', False, inter_x)
 
         if 'py' in (qt_orb_p):
-            gh.graph_spdf(Ess, ydosP, '$p_y$', False)
+            gh.graph_spdf(Ess, ydosP, '$p_y$', False, inter_x)
 
         if 'pz' in (qt_orb_p):
-            gh.graph_spdf(Ess, zdosP, '$p_z$', False)
+            gh.graph_spdf(Ess, zdosP, '$p_z$', False, inter_x)
 
         if ('px' in (qt_orb_p) or 'py' in (qt_orb_p) or 'pz' in (qt_orb_p)) and 'total' in spdf:
-            ltotxyz = ltotx + ltoty + ltotz + ldosS2 #adicionar orbitais d e f aqui depois para a soma total
-            gh.graph_spdf(Ess, ltotxyz, None, True)
+            ltotxyz = gh.sum_spdf(spdf, qt_orb_p ,ldosS2, ltotx, ltoty, ltotz)
+            gh.graph_spdf(Ess, ltotxyz, None, True, inter_x)
 
     #plota o gráfico para a contribuição total
     if 'total' in spdf and yn == 'no':
-        gh.graph_spdf(Ess, ltot, None, True)
+        gh.graph_spdf(Ess, ltot, None, True, inter_x)
 
     
     

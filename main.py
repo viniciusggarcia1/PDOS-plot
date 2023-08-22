@@ -99,6 +99,8 @@ if choice == 'by orbital':
     dx2_y2Dtot = 0
     dxyDtot = 0
 
+    ldosf = 0
+    
     qt_orb_p = np.array(1)
     qt_orb_d = np.array(1)
     print(qt_orb_d)
@@ -237,6 +239,10 @@ if choice == 'by orbital':
 
         if 'dxy' in (qt_orb_d):
             gh.graph_spdf(Ess, dxyD, 'dxy', False, inter_x)
+
+        #####TESTE PARA ORBITAL F. NÃO SEI SE VAI FUNCIONAR!!!##########
+        if 'f' in (spdf):
+            gh.graph_spdf(Ess, ldosf, 'f', False, inter_x)
 
         if 'total' in spdf:
             ltotxyz = gh.sum_spdf(spdf, qt_orb_p ,ldosS2, ltotx, ltoty, ltotz, qt_orb_d,

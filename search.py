@@ -1,8 +1,8 @@
 import re
 import os
 
-#path_folder = os.getcwd()  # Obtém o caminho da pasta atual
-path_folder = '/mnt/c/Users/vinic/OneDrive/Área de Trabalho/site_testes/PDOS-plot/example'
+path_folder = os.getcwd()  # Obtém o caminho da pasta atual
+#path_folder = '/mnt/c/Users/vinic/OneDrive/Área de Trabalho/site_testes/PDOS-plot/example'
 
 def files_directory(path_folder):
         full_name=[]

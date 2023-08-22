@@ -6,7 +6,6 @@
 # Aug 2023                                                                             #
 #                                                                                      #
 # ------------------------------------------------------------------------------------ #
-
 import numpy as np
 from matplotlib import pyplot as plt
 import re
@@ -17,10 +16,8 @@ import PDOS_graph as gh
 import questions as qs
 import pTerminalTools as tt
 
-
 tt.ProgramTitle('pDOS Plot', 'Vinícius G. Garcia', 'viniciusggarcia1@hotmail.com')
 tt.box('Code to plot PDOS from Quantum Espresso files')
-
 
 match_atoms=[]
 match_spdf=[]
@@ -36,8 +33,6 @@ inter_x=qs.Energy_graphx()
 
 #Pergunta se o plot vai ser por átomo ou por orbitais
 choice = qs.DOS_type()['answer']
-
-
 
 if choice == 'by atoms':
     atoms = qs.atoms_choice(src.files_directory(src.path_folder)[0])['answer']
@@ -81,8 +76,6 @@ if choice == 'by atoms':
     # Converter o arquivo SVG para PDF usando o cairosvg
     cairosvg.svg2pdf(url='temp_graph.svg', write_to='graph.pdf')
 
-
-
 if choice == 'by orbital':
     ltot = 0
     zdosP = 0
@@ -93,6 +86,23 @@ if choice == 'by orbital':
     ltoty = 0
     ltotz = 0
     ltotxyz = 0
+
+    dz2D = 0
+    dzxD = 0
+    dzyD = 0
+    dx2_y2D = 0
+    dxyD = 0
+    
+    dz2Dtot = 0
+    dzxDtot = 0
+    dzyDtot = 0
+    dx2_y2Dtot = 0
+    dxyDtot = 0
+
+    qt_orb_p = np.array(1)
+    qt_orb_d = np.array(1)
+    print(qt_orb_d)
+
     # Lista com os átomos e orbitais selecionados pelo usuário
     atoms = qs.atoms_choice(src.files_directory(src.path_folder)[0])['answer']
     spdf = qs.spdf_choice(src.files_directory(src.path_folder)[1])['answer']
@@ -109,9 +119,9 @@ if choice == 'by orbital':
     #Armazena as componentes dos orbitais que o usuário quer plotar
     if yn == 'yes':
         if 'p' in spdf:
-            qt_orb_p= qs.orbital_component_p()['answer']
+            qt_orb_p = qs.orbital_component_p()['answer']
         if 'd' in spdf:
-            qt_orb_d= qs.orbital_component_d()['answer']
+            qt_orb_d = qs.orbital_component_d()['answer']
 
     comp_orb=[]
     if yn == 'yes':
@@ -169,18 +179,30 @@ if choice == 'by orbital':
                     
                     #fazer mesmo procedimento para orbitais d e f
                     if spdf[i] == 'd':
-                        Ed, ldos, dz2, dzx, dzy, dx2_y2, dxy = np.loadtxt(full_path, unpack=True, usecols=(0,1,2,3,4,5,6))
-                    
+                        Es, ldos, dz2, dzx, dzy, dx2_y2, dxy = np.loadtxt(full_path, unpack=True, usecols=(0,1,2,3,4,5,6))
+
+                        dz2D = dz2D + dz2
+                        dzxD = dzxD + dzx
+                        dzyD = dzyD + dzy
+                        dx2_y2D = dx2_y2D + dx2_y2
+                        dxyD = dxyD + dxy
+
+                        dz2Dtot = dz2Dtot + dz2
+                        dzxDtot = dzxDtot + dzx
+                        dzyDtot = dzyDtot + dzy
+                        dx2_y2Dtot = dx2_y2Dtot + dx2_y2
+                        dxyDtot = dxyDtot + dxy
+
+                        ltot = ltot + ldos
+
                     if spdf[i] == 'f':
                         Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
                         ldosf = ldosf + ldos
                         ltot = ltot + ldos
-                        ####ACHO QUE O ORBITAL f ESTÁ QUASE PRONTO!!!###########
-                        
+                        ####ACHO QUE O ORBITAL f ESTÁ QUASE PRONTO!!!###########          
 
                         #print('hahaha')
-                
-
+            
         #plota o gráfico para os orbitais
         if spdf[i] != 'total':
             Ess=Es-Efermi
@@ -201,16 +223,30 @@ if choice == 'by orbital':
         if 'pz' in (qt_orb_p):
             gh.graph_spdf(Ess, zdosP, '$p_z$', False, inter_x)
 
-        if ('px' in (qt_orb_p) or 'py' in (qt_orb_p) or 'pz' in (qt_orb_p)) and 'total' in spdf:
-            ltotxyz = gh.sum_spdf(spdf, qt_orb_p ,ldosS2, ltotx, ltoty, ltotz)
+        if 'dz2' in (qt_orb_d):
+            gh.graph_spdf(Ess, dz2D, 'dz2', False, inter_x)
+
+        if 'dzx' in (qt_orb_d):
+            gh.graph_spdf(Ess, dzxD, 'dzx', False, inter_x)
+
+        if 'dzy' in (qt_orb_d):
+            gh.graph_spdf(Ess, dzyD, 'dzy', False, inter_x)
+
+        if 'dx2-y2' in (qt_orb_d):
+            gh.graph_spdf(Ess, dx2_y2D, 'dx2-y2', False, inter_x)
+
+        if 'dxy' in (qt_orb_d):
+            gh.graph_spdf(Ess, dxyD, 'dxy', False, inter_x)
+
+        if 'total' in spdf:
+            ltotxyz = gh.sum_spdf(spdf, qt_orb_p ,ldosS2, ltotx, ltoty, ltotz, qt_orb_d,
+                                   dz2Dtot, dzxDtot, dzyDtot, dx2_y2Dtot, dxyDtot)
             gh.graph_spdf(Ess, ltotxyz, None, True, inter_x)
 
     #plota o gráfico para a contribuição total
     if 'total' in spdf and yn == 'no':
         gh.graph_spdf(Ess, ltot, None, True, inter_x)
-
-    
-    
+     
     #Salva o gráfico
     plt.tight_layout()
     plt.savefig('temp_graph.svg', format="svg")

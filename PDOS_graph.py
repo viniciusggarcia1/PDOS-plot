@@ -27,10 +27,13 @@ def sum_spdf (spdf, qt_orb_p ,ldosS2, ltotx, ltoty, ltotz, qt_orb_d,
     ltot=0
     if 's' in spdf:
         ltot=ltot+ldosS2
+        
     if 'px' in qt_orb_p:
         ltot=ltot+ltotx
+
     if 'py' in qt_orb_p:
         ltot=ltot+ltoty
+
     if 'pz' in qt_orb_p:
         ltot=ltot+ltotz
     

@@ -77,33 +77,13 @@ if choice == 'by atoms':
     cairosvg.svg2pdf(url='temp_graph.svg', write_to='graph.pdf')
 
 if choice == 'by orbital':
-    ltot = 0
-    zdosP = 0
-    xdosP = 0
-    ydosP = 0
-    ldosS2 = 0
-    ltotx = 0
-    ltoty = 0
-    ltotz = 0
-    ltotxyz = 0
 
-    dz2D = 0
-    dzxD = 0
-    dzyD = 0
-    dx2_y2D = 0
-    dxyD = 0
-    
-    dz2Dtot = 0
-    dzxDtot = 0
-    dzyDtot = 0
-    dx2_y2Dtot = 0
-    dxyDtot = 0
+    #Definição de váriáveis iguais a zero:
+    ltot, zdosP, xdosP, ydosP, ldosS2, ltotx, ltoty, ltotz, ltotxyz, dz2D, dzxD = [0] * 11
+    dzyD, dx2_y2D, dxyD, dz2Dtot, dzxDtot, dzyDtot, dx2_y2Dtot, dxyDtot, ldosf = [0] * 9
 
-    ldosf = 0
-    
-    qt_orb_p = np.array(1)
-    qt_orb_d = np.array(1)
-    print(qt_orb_d)
+    qt_orb_p = np.array(0)
+    qt_orb_d = np.array(0)
 
     # Lista com os átomos e orbitais selecionados pelo usuário
     atoms = qs.atoms_choice(src.files_directory(src.path_folder)[0])['answer']
@@ -201,7 +181,7 @@ if choice == 'by orbital':
                         Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
                         ldosf = ldosf + ldos
                         ltot = ltot + ldos
-                        ####ACHO QUE O ORBITAL f ESTÁ QUASE PRONTO!!!###########          
+                        ####ACHO QUE O ORBITAL f ESTÁ PRONTO!!!###########          
 
                         #print('hahaha')
             
@@ -240,7 +220,7 @@ if choice == 'by orbital':
         if 'dxy' in (qt_orb_d):
             gh.graph_spdf(Ess, dxyD, 'dxy', False, inter_x)
 
-        #####TESTE PARA ORBITAL F. NÃO SEI SE VAI FUNCIONAR!!!##########
+        #####TESTE PARA ORBITAL f. NÃO SEI SE VAI FUNCIONAR!!!##########
         if 'f' in (spdf):
             gh.graph_spdf(Ess, ldosf, 'f', False, inter_x)
 

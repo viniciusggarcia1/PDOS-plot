@@ -80,7 +80,7 @@ if choice == 'by orbital':
 
     #Definição de váriáveis iguais a zero:
     ltot, zdosP, xdosP, ydosP, ldosS2, ltotx, ltoty, ltotz, ltotxyz, dz2D, dzxD = [0] * 11
-    dzyD, dx2_y2D, dxyD, dz2Dtot, dzxDtot, dzyDtot, dx2_y2Dtot, dxyDtot, ldosf = [0] * 9
+    dzyD, dx2_y2D, dxyD, dz2Dtot, dzxDtot, dzyDtot, dx2_y2Dtot, dxyDtot, ldosf, ltotD, ltotP = [0] * 11
 
     qt_orb_p = np.array(0)
     qt_orb_d = np.array(0)
@@ -104,6 +104,7 @@ if choice == 'by orbital':
             qt_orb_p = qs.orbital_component_p()['answer']
         if 'd' in spdf:
             qt_orb_d = qs.orbital_component_d()['answer']
+        
 
     comp_orb=[]
     if yn == 'yes':
@@ -152,6 +153,7 @@ if choice == 'by orbital':
                         ltotz = ltotz + zdos
 
                         ltot = ltot + ldos
+                        ltotP = ltotP + ldos
 
                     if spdf[i] == 's':
                         Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
@@ -176,6 +178,7 @@ if choice == 'by orbital':
                         dxyDtot = dxyDtot + dxy
 
                         ltot = ltot + ldos
+                        ltotD = ltotD + ldos
 
                     if spdf[i] == 'f':
                         Es, ldos = np.loadtxt(full_path, unpack=True, usecols=(0,1))
@@ -196,31 +199,39 @@ if choice == 'by orbital':
         if 's' in spdf:
             gh.graph_spdf(Ess, ldosS2, 's', False, inter_x)
             
-        if 'px' in (qt_orb_p):
-            gh.graph_spdf(Ess, xdosP, '$p_x$', False, inter_x)
+        if 'p' in comp_orb:
+            if 'px' in (qt_orb_p):
+                gh.graph_spdf(Ess, xdosP, '$p_x$', False, inter_x)
 
-        if 'py' in (qt_orb_p):
-            gh.graph_spdf(Ess, ydosP, '$p_y$', False, inter_x)
+            if 'py' in (qt_orb_p):
+                gh.graph_spdf(Ess, ydosP, '$p_y$', False, inter_x)
 
-        if 'pz' in (qt_orb_p):
-            gh.graph_spdf(Ess, zdosP, '$p_z$', False, inter_x)
+            if 'pz' in (qt_orb_p):
+                gh.graph_spdf(Ess, zdosP, '$p_z$', False, inter_x)
+        
+        if 'p' not in comp_orb and 'p' in spdf:
+            gh.graph_spdf(Ess, ltotP, '$p$', False, inter_x)
 
-        if 'dz2' in (qt_orb_d):
-            gh.graph_spdf(Ess, dz2D, 'dz2', False, inter_x)
+        if 'd' in comp_orb:
+            if 'dz2' in (qt_orb_d):
+                gh.graph_spdf(Ess, dz2D, '$dz^2$', False, inter_x)
 
-        if 'dzx' in (qt_orb_d):
-            gh.graph_spdf(Ess, dzxD, 'dzx', False, inter_x)
+            if 'dzx' in (qt_orb_d):
+                gh.graph_spdf(Ess, dzxD, 'dzx', False, inter_x)
 
-        if 'dzy' in (qt_orb_d):
-            gh.graph_spdf(Ess, dzyD, 'dzy', False, inter_x)
+            if 'dzy' in (qt_orb_d):
+                gh.graph_spdf(Ess, dzyD, 'dzy', False, inter_x)
 
-        if 'dx2-y2' in (qt_orb_d):
-            gh.graph_spdf(Ess, dx2_y2D, 'dx2-y2', False, inter_x)
+            if 'dx2-y2' in (qt_orb_d):
+                gh.graph_spdf(Ess, dx2_y2D, '$dx^2-y^2$', False, inter_x)
 
-        if 'dxy' in (qt_orb_d):
-            gh.graph_spdf(Ess, dxyD, 'dxy', False, inter_x)
+            if 'dxy' in (qt_orb_d):
+                gh.graph_spdf(Ess, dxyD, 'dxy', False, inter_x)
+        
+        if 'd' not in comp_orb and 'd' in spdf:
+            gh.graph_spdf(Ess, ltotD, '$d$', False, inter_x)
 
-        #####TESTE PARA ORBITAL f. NÃO SEI SE VAI FUNCIONAR!!!##########
+        #####TESTE PARA ORBITAL f. NÃO SEI SE VAI FUNCIONAR!!!###########
         if 'f' in (spdf):
             gh.graph_spdf(Ess, ldosf, 'f', False, inter_x)
 

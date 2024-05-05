@@ -11,6 +11,13 @@ def Energy_graphx ():
 	a_b = [float(num) for num in a_b]
 	return a_b
 
+def Energy_graphy ():
+	ab = input("Enter the y interval (a,b): ")
+	a_b = ab.split(',')
+	a_b = [float(num) for num in a_b]
+	return a_b
+
+
 
 def DOS_type ():
 	question = [

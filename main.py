@@ -28,8 +28,9 @@ E=[]
 #Efermi=-3
 Efermi=qs.Energy_Fermi ()
 
-#Pega o intervalo em x para plot do gráfico
+#Pega o intervalo em x e y para plot do gráfico
 inter_x=qs.Energy_graphx()
+inter_y=qs.Energy_graphy()
 
 #Pergunta se o plot vai ser por átomo ou por orbitais
 choice = qs.DOS_type()['answer']
@@ -61,11 +62,11 @@ if choice == 'by atoms':
 
         # Desloca pro nível de Fermi e plota a contribuição do átmo j
         Es=Es-Efermi
-        gh.graph_spdf(Es, ldosS, atoms[j], False, inter_x)
+        gh.graph_spdf(Es, ldosS, atoms[j], False, inter_x, inter_y)
 
     if pdos_tot == 'yes':
         #Es=Es-Efermi
-        gh.graph_spdf(Es, ltot, None, True, inter_x)
+        gh.graph_spdf(Es, ltot, None, True, inter_x, inter_y)
 
     #Salva o gráfico
     

@@ -244,7 +244,8 @@ if choice == 'by orbital':
     #plota o gráfico para a contribuição total
     if 'total' in spdf and yn == 'no':
         gh.graph_spdf(Ess, ltot, None, True, inter_x)
-     
+
+    ''' 
     #Salva o gráfico
     plt.tight_layout()
     plt.savefig('temp_graph.svg', format="svg")
@@ -252,3 +253,7 @@ if choice == 'by orbital':
 
     # Converter o arquivo SVG para PDF usando o cairosvg
     cairosvg.svg2pdf(url='temp_graph.svg', write_to='graph.pdf')
+    '''
+
+    plt.tight_layout()
+    plt.savefig('graph.png', dpi=1500)

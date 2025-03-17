@@ -3,7 +3,7 @@
 # Reads pdos files from Quantum Espresso and plots using matplotlib                    #
 #                                                                                      #
 # Vinícius G. Garcia - UFES                                                            #
-# Aug 2023                                                                             #
+# Aug 2023 -                                                                             #
 #                                                                                      #
 # ------------------------------------------------------------------------------------ #
 import numpy as np
